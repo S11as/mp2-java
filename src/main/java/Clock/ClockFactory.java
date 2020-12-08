@@ -1,6 +1,7 @@
 package Clock;
 
 import Clock.Clock;
+import com.github.javafaker.Crypto;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Number;
 

@@ -1,8 +1,8 @@
 package Clock;
 
-import org.w3c.dom.ranges.RangeException;
+import GUI.IObserver;
 
-import java.util.stream.Stream;
+import java.util.ArrayList;
 
 public class Clock implements IClock {
     protected int hour = 0;
@@ -10,12 +10,15 @@ public class Clock implements IClock {
     protected int price = 0;
     protected ClockBrands brand;
 
+    protected ArrayList<IObserver> observers = new ArrayList<>();
+
     public Clock(){}
 
     public Clock(ClockBrands brand, int price){
         this.setBrand(brand);
         this.setPrice(price);
     }
+
 
     public Clock(ClockBrands brand){
         this.setBrand(brand);
@@ -55,8 +58,10 @@ public class Clock implements IClock {
             throw new IllegalArgumentException("Price shouldnt be lower than 0");
         }
         this.price = price;
+        this.inform();
     }
 
+    public int getSecond(){return 0;}
     @Override
     public int getPrice(){
         return this.price;
@@ -67,12 +72,17 @@ public class Clock implements IClock {
         return this.brand;
     }
 
-    public void setBrand(ClockBrands brand) { this.brand = brand; }
+
+    public void setBrand(ClockBrands brand) {
+        this.brand = brand;
+        this.inform();
+    }
 
     @Override
     public void setTime(int hour, int minute, int seconds){
         this.setHour(hour);
         this.setMinute(minute);
+        this.inform();
     }
 
 
@@ -88,6 +98,19 @@ public class Clock implements IClock {
         int excessHours = (this.minute + minute) / 60;
         this.minute  = (this.minute + minute) % 60;
         this.hour = (this.hour + excessHours + hour) % 24;
+        this.inform();
+    }
+
+
+    @Override
+    public void subscribe(IObserver observer) {
+        this.observers.add(observer);
+    }
+
+    public void inform() {
+        for(IObserver o:observers){
+            o.refresh();
+        }
     }
 
 }

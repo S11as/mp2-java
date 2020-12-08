@@ -2,6 +2,7 @@ package ClockShop;
 
 import Clock.ClockBrands;
 import Clock.IClock;
+import GUI.IObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 public class ClockShop {
     private ArrayList<IClock> clocks = new ArrayList<>();
+    protected ArrayList<IObserver> observers = new ArrayList<>();
 
     public ClockShop(){}
     public ClockShop(ArrayList<IClock> clocks){
@@ -66,6 +68,25 @@ public class ClockShop {
             }
         }
         return brand;
+    }
+
+    public ArrayList<IClock> getClocks(){
+        return clocks;
+    }
+
+    public void subscribe(IObserver observer){
+        this.observers.add(observer);
+    }
+
+    public void inform(){
+        for(IObserver o:observers){
+            o.refresh();
+        }
+    }
+
+    public void addClock(IClock c){
+        this.clocks.add(c);
+        this.inform();
     }
 
 }

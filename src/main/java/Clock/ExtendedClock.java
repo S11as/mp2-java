@@ -21,8 +21,11 @@ public class ExtendedClock extends Clock implements IClock {
         if(seconds < 0){
             throw new IllegalArgumentException("Price shouldnt be lower than 0");
         }
-        this.seconds = seconds;
+        this.seconds = seconds%60;
     }
+
+    public int getSecond(){return this.seconds;}
+
 
     @Override
     public void addTime(int hour, int minute, int seconds){
@@ -31,6 +34,7 @@ public class ExtendedClock extends Clock implements IClock {
         this.seconds = (this.seconds + seconds) % 60;
         this.minute = (this.minute + minute + excessMinutes) % 60;
         this.hour = (this.hour + hour + excessHours) % 24;
+        this.inform();
     }
 
     @Override
@@ -38,6 +42,7 @@ public class ExtendedClock extends Clock implements IClock {
         this.setHour(hour);
         this.setMinute(minute);
         this.setSeconds(seconds);
+        this.inform();
     }
 
     @Override
