@@ -1,15 +1,22 @@
 package ClockShop;
 
 import Clock.ClockBrands;
+import Clock.ExtendedClock;
 import Clock.IClock;
+import GUI.IObserver;
+import com.google.gson.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ClockShop.InterfaceSerializer;
+
 
 public class ClockShop {
     private ArrayList<IClock> clocks = new ArrayList<>();
+    transient protected ArrayList<IObserver> observers = new ArrayList<>();
 
     public ClockShop(){}
     public ClockShop(ArrayList<IClock> clocks){
@@ -67,5 +74,65 @@ public class ClockShop {
         }
         return brand;
     }
+
+    public ArrayList<IClock> getClocks(){
+        return clocks;
+    }
+
+    public void subscribe(IObserver observer){
+        this.observers.add(observer);
+    }
+
+    public void inform(){
+        for(IObserver o:observers){
+            o.refresh();
+        }
+    }
+
+    public void addClock(IClock c){
+        this.clocks.add(c);
+        this.inform();
+    }
+
+    public boolean save(String filename){
+        try{
+            Writer writer = new FileWriter(filename);
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(IClock.class, new InterfaceSerializer())
+                    .create();
+            gson.toJson(this, writer);
+            writer.flush();
+            writer.close();
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public  ClockShop load(String filename) throws IOException {
+        File myFile = new File(filename);
+        FileInputStream fIn = new FileInputStream(myFile);
+        BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
+        String aDataRow = "";
+        StringBuilder aBuffer = new StringBuilder();
+        while ((aDataRow = myReader.readLine()) != null)
+        {
+            aBuffer.append(aDataRow);
+        }
+        myReader.close();
+        String json = aBuffer.toString();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(IClock.class, new InterfaceSerializer())
+                .create();
+        ClockShop clockShop = gson.fromJson(json, ClockShop.class);
+        this.clocks = clockShop.getClocks();
+        this.inform();
+        return this;
+    }
+
+
 
 }
