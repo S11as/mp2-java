@@ -11,6 +11,7 @@ public interface IClock{
     int getSecond();
     int getPrice();
     ClockBrands getBrand();
+    ClockType getType();
 
     void subscribe(IObserver observer);
 

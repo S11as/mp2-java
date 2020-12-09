@@ -8,9 +8,11 @@ public class Clock implements IClock {
     protected int hour = 0;
     protected int minute = 0;
     protected int price = 0;
-    protected ClockBrands brand;
 
-    protected ArrayList<IObserver> observers = new ArrayList<>();
+    protected ClockBrands brand;
+    protected ClockType type = ClockType.DEFAULT;
+
+    transient protected ArrayList<IObserver> observers = new ArrayList<>();
 
     public Clock(){}
 
@@ -72,6 +74,10 @@ public class Clock implements IClock {
         return this.brand;
     }
 
+    @Override
+    public ClockType getType() {
+        return this.type;
+    }
 
     public void setBrand(ClockBrands brand) {
         this.brand = brand;

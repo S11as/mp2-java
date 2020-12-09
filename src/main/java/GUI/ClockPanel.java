@@ -16,6 +16,10 @@ public class ClockPanel extends JPanel implements IObserver{
     private JLabel brand;
     private JLabel price;
 
+    private JLabel hoursLabel;
+    private JLabel minutesLabel;
+    private JLabel secondsLabel;
+
     private JTextField hours;
     private JTextField minutes;
     private JTextField seconds;
@@ -29,6 +33,10 @@ public class ClockPanel extends JPanel implements IObserver{
         minutes = new JTextField("",4);
         seconds = new JTextField("",4);
 
+        hoursLabel = new JLabel("1");
+        minutesLabel = new JLabel("2");
+        secondsLabel = new JLabel("3");
+
         setTime = new JButton("Set time");
 
 
@@ -37,9 +45,12 @@ public class ClockPanel extends JPanel implements IObserver{
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
         this.placeItem(brand, 0, 0, 1);
-        this.placeItem(hours, 1, 0, 1);
-        this.placeItem(minutes, 2, 0, 1);
-        this.placeItem(seconds, 3, 0, 1);
+        this.placeItem(hoursLabel, 1, 0,0, true);
+        this.placeItem(minutesLabel, 2, 0,0, true);
+        this.placeItem(secondsLabel, 3, 0,0, true);
+        this.placeItem(hours, 1, 1, 1);
+        this.placeItem(minutes, 2, 1, 1);
+        this.placeItem(seconds, 3, 1, 1);
         this.placeItem(price, 4, 0, 1);
         this.placeItem(setTime, 4, 1, 2);
 
@@ -56,14 +67,17 @@ public class ClockPanel extends JPanel implements IObserver{
         constraints.gridx=x;
         constraints.gridy=y;
         constraints.gridwidth=xwidth;
+        constraints.ipadx = 3;
         this.add(c, constraints);
     }
 
-    void placeItem(Container c, int x, int y, int xwidth, double yweight){
+    void placeItem(Container c, int x, int y, int xwidth, boolean center){
         constraints.gridx=x;
         constraints.gridy=y;
         constraints.gridwidth=xwidth;
-        constraints.weighty = yweight;
+        if(center)
+            constraints.ipadx = 10;
+
         this.add(c, constraints);
     }
 
@@ -72,9 +86,12 @@ public class ClockPanel extends JPanel implements IObserver{
         if(model == null) return;
         this.brand.setText(model.getBrand().getBrandName());
         this.price.setText("$"+model.getPrice());
-        this.hours.setText(String.valueOf(model.getHour()));
-        this.minutes.setText(String.valueOf(model.getMinute()));
-        this.seconds.setText(String.valueOf(model.getSecond()));
+        this.hoursLabel.setText(model.getHour()+"h");
+        this.minutesLabel.setText(model.getMinute()+"m");
+        this.secondsLabel.setText(model.getSecond()+"s");
+        this.hours.setText(String.valueOf(0));
+        this.minutes.setText(String.valueOf(0));
+        this.seconds.setText(String.valueOf(0));
     }
 
     class ButtonEventListener implements ActionListener {

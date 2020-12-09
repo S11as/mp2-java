@@ -13,11 +13,12 @@ public class ClockShopView extends JFrame implements IObserver{
     private ClockShop shop;
     private ArrayList<ClockPanel> list = new ArrayList<>();
     private AddClockPanel panel;
+    private SaveLoadPanel saveLoadPanel;
 
     public ClockShopView(ClockShop s){
         super("Clock shop");
 
-        this.setBounds(500, 500, 400, 400);
+        this.setBounds(500, 500, 400, 440);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -41,7 +42,9 @@ public class ClockShopView extends JFrame implements IObserver{
             this.add(p);
         }
         panel = new AddClockPanel(shop);
+        saveLoadPanel = new SaveLoadPanel(shop);
         this.add(panel);
+        this.add(saveLoadPanel);
     }
 
     @Override
@@ -50,6 +53,7 @@ public class ClockShopView extends JFrame implements IObserver{
             this.remove(p);
         }
         this.remove(panel);
+        this.remove(saveLoadPanel);
         this.list.clear();
 
 
@@ -62,7 +66,8 @@ public class ClockShopView extends JFrame implements IObserver{
             this.add(p);
         }
         this.add(panel);
+        this.add(saveLoadPanel);
 
-        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight()+100);
+        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.list.size()*100+40);
     }
 }
